@@ -1,6 +1,6 @@
 <p align="center">
   <img
-    src="https://raw.githubusercontent.com/CityOfZion/wallet-connect-sdk/develop/.github/resources/images/coz.png"
+    src="https://github.com/AfricaN3/LifeSaver-Contracts/blob/master/media/mascot.jpg"
     width="200px;"></img>
 </p>
 
