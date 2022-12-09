@@ -1,11 +1,11 @@
-Epoch: An epoch is equivalent to an event
+Era: An Era is equivalent to a blood drive event
 	Rules:
 	1) Only one can be active at a time. 
-	2) The epoch should only be created when 50bNEO is deposited to the contract with "create epoch" method called
-	3) When tokens are just transferred, they should be added to the reward pool of the active epoch or added to the AfricaN3 fund
-	4) An accompanying raffle takes place when the epoch ends where only NFTs belonging to this raffle serve as tickets for the raffle.
+	2) The Era should only be created when 50bNEO is deposited to the contract with "create Era" method called
+	3) When tokens are just transferred, they should be added to the reward pool of the active Era or added to the AfricaN3 fund
+	4) An accompanying raffle takes place when the Era ends where only NFTs belonging to this raffle serve as tickets for the raffle.
 
-Epoch Fields:
+Era Fields:
 	Admin: Hash160
 	Number of winners: Integer
 	Organization : String
@@ -14,17 +14,17 @@ Epoch Fields:
 
 NFT Meta:
 	Block: Integer = Block number beyond which NFT cannot be transferred (not to be included in the properties)
-	Epoch: Integer = Epoch it belongs to
-	Title: String = Combo of Epoch, and ID
+	Era: Integer = Era it belongs to
+	Title: String = Combo of Era, and ID
 	ID: Integer = ID of NFT
-	Description: String = Combo of Epoch, Organization, date and blood group of owner
+	Description: String = Combo of Era, Organization, date and blood group of owner
 
 Methods:
 	transfer only works when the NFTs block number is greater than current block
-	onNEP17Payment should call the create_epoch method or add to the present reward pool
-	mint method can only be called by active epoch admin and should raise error if the to address already possess a live saver NFT
-	active epoch can be gotten by calling the total_epoch method
-	set_block method should take NFT id and should be called only by the epoch admin. sets block 1 hour ahead so user can transfer
+	onNEP17Payment should call the create_era method or add to the present reward pool
+	mint method can only be called by active Era admin and should raise error if the to address already possess a live saver NFT
+	active Era can be gotten by calling the total_era method
+	set_block method should take NFT id and should be called only by the Era admin. sets block 1 hour ahead so user can transfer
 
 Blood drive template: 
 	https://themeforest.net/item/drop-blood-donation-mobile-figma-template/27688784
