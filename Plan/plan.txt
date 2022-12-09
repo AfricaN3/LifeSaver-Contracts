@@ -2,8 +2,8 @@ Epoch: An epoch is equivalent to an event
 	Rules:
 	1) Only one can be active at a time. 
 	2) The epoch should only be created when 50bNEO is deposited to the contract with "create epoch" method called
-	3) When tokens are just transferred, they should be added to the reward pool of the active epoch
-	4) 
+	3) When tokens are just transferred, they should be added to the reward pool of the active epoch or added to the AfricaN3 fund
+	4) An accompanying raffle takes place when the epoch ends where only NFTs belonging to this raffle serve as tickets for the raffle.
 
 Epoch Fields:
 	Admin: Hash160
