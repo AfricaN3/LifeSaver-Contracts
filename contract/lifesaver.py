@@ -38,8 +38,8 @@ TOKEN_DECIMALS = 0
 # Stores the total token count
 TOKEN_COUNT: bytes = b'!TOKEN_COUNT'
 
-# Epoch count
-EPOCH_COUNT: bytes = b'EPOCH_COUNT'
+# Era count
+ERA_COUNT: bytes = b'ERA_COUNT'
 
 # Stores the total account count
 ACCOUNT_COUNT: bytes = b'!ACCOUNT_COUNT'
