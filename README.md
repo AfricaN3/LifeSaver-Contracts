@@ -1,6 +1,6 @@
 <p align="center">
   <img
-    src="https://github.com/AfricaN3/LifeSaver-Contracts/blob/master/media/mascot.jpg"
+    src="https://github.com/AfricaN3/LifeSaver-Contracts/blob/master/media/mascot.png"
     width="200px;"></img>
 </p>
 
