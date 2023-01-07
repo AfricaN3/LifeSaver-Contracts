@@ -1,8 +1,8 @@
 Era: An Era is equivalent to a blood drive event
-	Rules:
-	1) Only one can be active at a time. 
-	2) The Era should only be created when 50bNEO is deposited to the contract with "create Era" method called
-	3) When tokens are just transferred, they should be added to the reward pool of the active Era or added to the AfricaN3 fund
+	Rules: 
+	1) The Era should only be created when 50 $GAS is deposited to the contract with "create Era" method called
+	2) When tokens are just transferred, they should be added to the reward pool of the active Era
+	3) When the token transferred is equal to the era mint fee, reward pool should be updated and LifeSaver should be minted to fund donor's account 
 	4) An accompanying raffle takes place when the Era ends where only NFTs belonging to this raffle serve as tickets for the raffle.
 
 Era Fields:
@@ -10,18 +10,24 @@ Era Fields:
 	Number of winners: Integer
 	Organization : String
 	Date of Blood drive: String
-	Active: Boolean = should give a class method 'can_mint' that determines if NFTs can be minted
+	Mint fee: Integer
+    Era ID: Bytes 
+    Total Supply: Integer 
+    Reward: Integer
+    Status: Integer
+    Collection ID: Bytes
 
 NFT Meta:
 	Block: Integer = Block number beyond which NFT cannot be transferred (not to be included in the properties)
-	Era: Integer = Era it belongs to
+	Era ID: bytes = ID of the Era it belongs to
+	Token Era ID: Integer = ID of the NFT in the Era it belongs to
 	Title: String = Combo of Era, and ID
 	ID: Integer = ID of NFT
-	Description: String = Combo of Era, Organization, date and blood group of owner
+	Description: String = Combo of Era, Organization, date and reward
 
 Methods:
 	transfer only works when the NFTs block number is greater than current block
-	onNEP17Payment should call the create_era method or add to the present reward pool
+	onNEP17Payment should call the create_era method or add to the present reward pool and mint donor NFT if token is equal to era mint fee
 	mint method can only be called by active Era admin and should raise error if the to address already possess a live saver NFT
 	active Era can be gotten by calling the total_era method
 	set_block method should take NFT id and should be called only by the Era admin. sets block 1 hour ahead so user can transfer
