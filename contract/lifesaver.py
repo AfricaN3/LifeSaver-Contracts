@@ -21,7 +21,7 @@ def manifest_metadata() -> NeoMetadata:
     Defines this smart contract's metadata information
     """
     meta = NeoMetadata()
-    meta.admin = 'AfricaN3'
+    meta.author = 'AfricaN3'
     meta.description = 'The NFTs for Life Savers (to be changed)'
     meta.email = 'hello@african3.com'
     meta.supported_standards = ['NEP-11']
