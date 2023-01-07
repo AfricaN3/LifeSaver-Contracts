@@ -401,6 +401,7 @@ def onNEP17Payment(from_address: UInt160, amount: int, data: Any):
     elif action_type == ACTION_CREATE_ERA:
         if calling_script_hash != GAS:
             abort()
+        assert amount == getEraFee(), 'amount is invalid for era creation'
         no_of_winners = cast(int, transfer_data[1])
         organization = cast(bytes, transfer_data[2])
         date = cast(bytes, transfer_data[3])
