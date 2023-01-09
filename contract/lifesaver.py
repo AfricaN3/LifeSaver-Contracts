@@ -939,6 +939,7 @@ def donate_to_era(era_id: bytes, amount: int, donor: UInt160) -> bool:
     if amount == era_donated.get_mint_fee():
         internal_mint(era_id, donor)
     on_donation_deposit(donor, amount, era_id)
+    return True
 
 
 # Gets the accounts that belong to an era into a list
