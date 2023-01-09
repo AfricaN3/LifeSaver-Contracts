@@ -636,19 +636,22 @@ def mk_token_index_key(account_id: bytes) -> bytes:
 @public
 def isOfEra(account: UInt160, era_id: bytes) -> bool:
     assert validate_address(account), 'address must be a valid 20 byte UInt160'
+    era_id_string = base64_encode(era_id)
     account64 = base64_encode(account)
-    return get_read_only_context().create_map(ERA_PRESENCE + era_id + '/').get(account64).to_bool()
+    return get_read_only_context().create_map(ERA_PRESENCE + era_id_string + '/').get(account64).to_bool()
 
 
 def addEraToAccount(account: UInt160, era_id: bytes) -> bool:
+    era_id_string = base64_encode(era_id)
     account64 = base64_encode(account)
-    get_context().create_map(ERA_PRESENCE + era_id + '/').put(account64, True)
+    get_context().create_map(ERA_PRESENCE + era_id_string + '/').put(account64, True)
     return True
 
 
 def removeEraFromAccount(account: UInt160, era_id: bytes) -> bool:
+    era_id_string = base64_encode(era_id)
     account64 = base64_encode(account)
-    get_context().create_map(ERA_PRESENCE + era_id + '/').delete(account64)
+    get_context().create_map(ERA_PRESENCE + era_id_string + '/').delete(account64)
     return True
 
 @public
