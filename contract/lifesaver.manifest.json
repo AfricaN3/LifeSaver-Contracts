@@ -1,0 +1,461 @@
+{
+    "name": "lifesaver",
+    "groups": [],
+    "abi": {
+        "methods": [
+            {
+                "name": "getEraFee",
+                "offset": 37,
+                "parameters": [],
+                "returntype": "Integer",
+                "safe": false
+            },
+            {
+                "name": "setEraFee",
+                "offset": 60,
+                "parameters": [
+                    {
+                        "name": "era_fee",
+                        "type": "Integer"
+                    }
+                ],
+                "returntype": "Boolean",
+                "safe": false
+            },
+            {
+                "name": "symbol",
+                "offset": 195,
+                "parameters": [],
+                "returntype": "String",
+                "safe": true
+            },
+            {
+                "name": "decimals",
+                "offset": 197,
+                "parameters": [],
+                "returntype": "Integer",
+                "safe": true
+            },
+            {
+                "name": "totalSupply",
+                "offset": 199,
+                "parameters": [],
+                "returntype": "Integer",
+                "safe": true
+            },
+            {
+                "name": "balanceOf",
+                "offset": 235,
+                "parameters": [
+                    {
+                        "name": "owner",
+                        "type": "Hash160"
+                    }
+                ],
+                "returntype": "Integer",
+                "safe": true
+            },
+            {
+                "name": "tokensOf",
+                "offset": 293,
+                "parameters": [
+                    {
+                        "name": "owner",
+                        "type": "Hash160"
+                    }
+                ],
+                "returntype": "InteropInterface",
+                "safe": true
+            },
+            {
+                "name": "transfer",
+                "offset": 351,
+                "parameters": [
+                    {
+                        "name": "to",
+                        "type": "Hash160"
+                    },
+                    {
+                        "name": "token_id",
+                        "type": "ByteArray"
+                    },
+                    {
+                        "name": "data",
+                        "type": "Any"
+                    }
+                ],
+                "returntype": "Boolean",
+                "safe": false
+            },
+            {
+                "name": "ownerOf",
+                "offset": 791,
+                "parameters": [
+                    {
+                        "name": "token_id",
+                        "type": "ByteArray"
+                    }
+                ],
+                "returntype": "Hash160",
+                "safe": true
+            },
+            {
+                "name": "tokens",
+                "offset": 812,
+                "parameters": [],
+                "returntype": "InteropInterface",
+                "safe": true
+            },
+            {
+                "name": "properties",
+                "offset": 833,
+                "parameters": [
+                    {
+                        "name": "token_id",
+                        "type": "ByteArray"
+                    }
+                ],
+                "returntype": "Map",
+                "safe": true
+            },
+            {
+                "name": "_deploy",
+                "offset": 4926,
+                "parameters": [
+                    {
+                        "name": "data",
+                        "type": "Any"
+                    },
+                    {
+                        "name": "update",
+                        "type": "Boolean"
+                    }
+                ],
+                "returntype": "Void",
+                "safe": false
+            },
+            {
+                "name": "onNEP11Payment",
+                "offset": 882,
+                "parameters": [
+                    {
+                        "name": "from_address",
+                        "type": "Hash160"
+                    },
+                    {
+                        "name": "amount",
+                        "type": "Integer"
+                    },
+                    {
+                        "name": "token_id",
+                        "type": "ByteArray"
+                    },
+                    {
+                        "name": "data",
+                        "type": "Any"
+                    }
+                ],
+                "returntype": "Void",
+                "safe": false
+            },
+            {
+                "name": "onNEP17Payment",
+                "offset": 887,
+                "parameters": [
+                    {
+                        "name": "from_address",
+                        "type": "Hash160"
+                    },
+                    {
+                        "name": "amount",
+                        "type": "Integer"
+                    },
+                    {
+                        "name": "data",
+                        "type": "Any"
+                    }
+                ],
+                "returntype": "Void",
+                "safe": false
+            },
+            {
+                "name": "total_accounts",
+                "offset": 1265,
+                "parameters": [],
+                "returntype": "Integer",
+                "safe": false
+            },
+            {
+                "name": "offline_mint",
+                "offset": 1302,
+                "parameters": [
+                    {
+                        "name": "era_id",
+                        "type": "ByteArray"
+                    },
+                    {
+                        "name": "account",
+                        "type": "Hash160"
+                    }
+                ],
+                "returntype": "ByteArray",
+                "safe": false
+            },
+            {
+                "name": "update",
+                "offset": 1406,
+                "parameters": [
+                    {
+                        "name": "script",
+                        "type": "ByteArray"
+                    },
+                    {
+                        "name": "manifest",
+                        "type": "ByteArray"
+                    },
+                    {
+                        "name": "data",
+                        "type": "Any"
+                    }
+                ],
+                "returntype": "Void",
+                "safe": false
+            },
+            {
+                "name": "get_user_json",
+                "offset": 1815,
+                "parameters": [
+                    {
+                        "name": "address",
+                        "type": "Hash160"
+                    }
+                ],
+                "returntype": "Map",
+                "safe": false
+            },
+            {
+                "name": "get_user",
+                "offset": 1829,
+                "parameters": [
+                    {
+                        "name": "address",
+                        "type": "Hash160"
+                    }
+                ],
+                "returntype": "Array",
+                "safe": false
+            },
+            {
+                "name": "isOfEra",
+                "offset": 2053,
+                "parameters": [
+                    {
+                        "name": "account",
+                        "type": "Hash160"
+                    },
+                    {
+                        "name": "era_id",
+                        "type": "ByteArray"
+                    }
+                ],
+                "returntype": "Boolean",
+                "safe": false
+            },
+            {
+                "name": "set_user_permissions",
+                "offset": 2529,
+                "parameters": [
+                    {
+                        "name": "user",
+                        "type": "Hash160"
+                    },
+                    {
+                        "name": "permissions",
+                        "type": "Map"
+                    }
+                ],
+                "returntype": "Boolean",
+                "safe": false
+            },
+            {
+                "name": "get_era_json",
+                "offset": 2716,
+                "parameters": [
+                    {
+                        "name": "era_id",
+                        "type": "ByteArray"
+                    }
+                ],
+                "returntype": "Map",
+                "safe": false
+            },
+            {
+                "name": "get_era",
+                "offset": 2730,
+                "parameters": [
+                    {
+                        "name": "era_id",
+                        "type": "ByteArray"
+                    }
+                ],
+                "returntype": "Array",
+                "safe": false
+            },
+            {
+                "name": "total_era",
+                "offset": 2813,
+                "parameters": [],
+                "returntype": "Integer",
+                "safe": false
+            },
+            {
+                "name": "end_era",
+                "offset": 2849,
+                "parameters": [
+                    {
+                        "name": "era_id",
+                        "type": "ByteArray"
+                    }
+                ],
+                "returntype": "Boolean",
+                "safe": false
+            },
+            {
+                "name": "pay_winners",
+                "offset": 3387,
+                "parameters": [
+                    {
+                        "name": "era_id",
+                        "type": "ByteArray"
+                    }
+                ],
+                "returntype": "Boolean",
+                "safe": false
+            },
+            {
+                "name": "makeTransferable",
+                "offset": 4570,
+                "parameters": [
+                    {
+                        "name": "token_id",
+                        "type": "ByteArray"
+                    }
+                ],
+                "returntype": "Boolean",
+                "safe": false
+            },
+            {
+                "name": "get_life",
+                "offset": 4737,
+                "parameters": [
+                    {
+                        "name": "token_id",
+                        "type": "ByteArray"
+                    }
+                ],
+                "returntype": "Array",
+                "safe": false
+            },
+            {
+                "name": "get_life_json",
+                "offset": 4791,
+                "parameters": [
+                    {
+                        "name": "token_id",
+                        "type": "ByteArray"
+                    }
+                ],
+                "returntype": "Map",
+                "safe": false
+            },
+            {
+                "name": "get_life_json_flat",
+                "offset": 4805,
+                "parameters": [
+                    {
+                        "name": "token_id",
+                        "type": "ByteArray"
+                    }
+                ],
+                "returntype": "Map",
+                "safe": false
+            },
+            {
+                "name": "_initialize",
+                "offset": 5130,
+                "parameters": [],
+                "returntype": "Void",
+                "safe": false
+            }
+        ],
+        "events": [
+            {
+                "name": "Transfer",
+                "parameters": [
+                    {
+                        "name": "from_addr",
+                        "type": "Any"
+                    },
+                    {
+                        "name": "to_addr",
+                        "type": "Any"
+                    },
+                    {
+                        "name": "amount",
+                        "type": "Integer"
+                    },
+                    {
+                        "name": "token_id",
+                        "type": "ByteArray"
+                    }
+                ]
+            },
+            {
+                "name": "DonationDeposit",
+                "parameters": [
+                    {
+                        "name": "account",
+                        "type": "Hash160"
+                    },
+                    {
+                        "name": "donation_quantity",
+                        "type": "Integer"
+                    },
+                    {
+                        "name": "era",
+                        "type": "ByteArray"
+                    }
+                ]
+            },
+            {
+                "name": "EraCreated",
+                "parameters": [
+                    {
+                        "name": "era",
+                        "type": "Integer"
+                    },
+                    {
+                        "name": "organization",
+                        "type": "ByteArray"
+                    }
+                ]
+            }
+        ]
+    },
+    "permissions": [
+        {
+            "contract": "*",
+            "methods": "*"
+        }
+    ],
+    "trusts": [],
+    "features": {},
+    "supportedstandards": [
+        "NEP-11"
+    ],
+    "extra": {
+        "Author": "AfricaN3",
+        "Description": "The NFTs for Life Savers (to be changed)",
+        "Email": "hello@african3.com"
+    }
+}

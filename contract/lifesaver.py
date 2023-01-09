@@ -45,7 +45,7 @@ TOKEN_DECIMALS = 0
 # Stores the total token count
 TOKEN_COUNT: bytes = b'!TOKEN_COUNT'
 
-ERA_FEE_KEY = 'ef'
+ERA_FEE_KEY: bytes = b'ERA_FEE'
 # Initial fee = 100 GAS
 INITIAL_ERA_FEE = 10_000_000_000
 
@@ -944,7 +944,8 @@ def donate_to_era(era_id: bytes, amount: int, donor: UInt160) -> bool:
 
 # Gets the accounts that belong to an era into a list
 def createListOfEraAccounts(era_id: bytes) -> List[UInt160]:
-    era_accounts_key = ERA_PRESENCE + era_id + '/'
+    era_id_string = base64_encode(era_id)
+    era_accounts_key = ERA_PRESENCE + era_id_string + '/'
     accounts = find(era_accounts_key)
 
     accounts_list: List[UInt160] = []
