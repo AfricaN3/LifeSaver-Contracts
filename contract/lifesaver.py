@@ -224,7 +224,8 @@ def transfer(to: UInt160, token_id: ByteString, data: Any) -> bool:
     """
     assert len(to) == 20, 'Incorrect `to` length'
 
-    life: Life = get_life(token_id)
+    token_id_bytes: bytes = token_id.to_bytes()
+    life: Life = get_life(token_id_bytes)
     token_owner: UInt160 = life.get_owner()
     life_era_id: bytes = life.get_era_id()
 
@@ -252,7 +253,7 @@ def transfer(to: UInt160, token_id: ByteString, data: Any) -> bool:
         life.set_owner(to)
         save_life(life)
 
-    post_transfer(token_owner, to, token_id, data)
+    post_transfer(token_owner, to, token_id_bytes, data)
     return True
 
 
@@ -290,7 +291,8 @@ def ownerOf(token_id: ByteString) -> UInt160:
     :return: the owner of the specified token.
     :raise AssertionError: raised if `token_id` is not a valid NFT.
     """
-    life: Life = get_life(token_id)
+    token_id_bytes: bytes = token_id.to_bytes()
+    life: Life = get_life(token_id_bytes)
     owner = life.get_owner()
     return owner
 
@@ -319,7 +321,8 @@ def properties(token_id: ByteString) -> Dict[str, Any]:
     :return: a serialized NVM object containing the properties for the given NFT.
     :raise AssertionError: raised if `token_id` is not a valid NFT, or if no metadata available.
     """
-    life_json = get_life_json_flat(token_id)
+    token_id_bytes: bytes = token_id.to_bytes()
+    life_json = get_life_json_flat(token_id_bytes)
     assert len(life_json) != 0, 'life does not exist'
 
     return life_json
