@@ -849,9 +849,12 @@ def end_era(era_id: bytes) -> bool:
     
     era_to_end.increment_status()
 
-    description = 'Holders of LifeSaver NFT of Era #' + era_id.to_str() + '.'
-    collection_type = 'UInt160'
-    extra = 'AfricaN3'
+    description_str: str = 'Holders of LifeSaver NFT of Era #' + era_id.to_str() + '.'
+    collection_type_str: str = 'UInt160'
+    extra_str: str = 'Proudly sponsored by: ' + era_to_end.get_organization().to_str() + '.'
+    description: bytes = serialize(description_str)
+    collection_type: bytes = serialize(collection_type_str)
+    extra: bytes = serialize(extra_str)
     era_holders : list[UInt160] = createListOfEraAccounts(era_id)
 
     era_holders_collection_id: int = Collection.create_collection(description, collection_type, extra, era_holders)
@@ -887,9 +890,12 @@ def pay_winners(era_id: bytes) -> bool:
     
     winners: List[bytes] = Collection.sample_from_collection(era_to_pay_holders_collection_id, number_of_winners)
 
-    description = 'Winners of LifeSaver Raffle of Era #' + era_id.to_str() + '.'
-    collection_type = 'UInt160'
-    extra = 'AfricaN3'
+    description_str: str = 'Winners of LifeSaver Raffle of Era #' + era_id.to_str() + '.'
+    collection_type_str: str = 'UInt160'
+    extra_str: str = 'Proudly sponsored by: ' + era_to_pay.get_organization().to_str() + '.'
+    description: bytes = serialize(description_str)
+    collection_type: bytes = serialize(collection_type_str)
+    extra: bytes = serialize(extra_str)
     era_winners_collection_id: int = Collection.create_collection(description, collection_type, extra, winners)
     
     era_to_pay.set_winners_collection_id(era_winners_collection_id)
