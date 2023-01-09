@@ -105,7 +105,7 @@ def validate_address(address: UInt160) -> bool:
         return False
     return True
 
-@public
+@public(safe=True)
 def getEraFee() -> int:
     return get(ERA_FEE_KEY).to_int()
 
@@ -420,7 +420,7 @@ def onNEP17Payment(from_address: UInt160, amount: int, data: Any):
 # -------------------------------------------
 
 
-@public
+@public(safe=True)
 def total_accounts() -> int:
     """
     Gets the number of accounts.
@@ -581,7 +581,7 @@ class User:
         return self._permissions['contract_upgrade']
 
 
-@public
+@public(safe=True)
 def get_user_json(address: UInt160) -> Dict[str, Any]:
     """
     Gets the JSON representation of a user account
@@ -591,7 +591,7 @@ def get_user_json(address: UInt160) -> Dict[str, Any]:
     user: User = get_user(address)
     return user.export()
 
-@public
+@public(safe=True)
 def get_user(address: UInt160) -> User:
     """
     Gets a User instance
@@ -633,7 +633,7 @@ def mk_token_index_key(account_id: bytes) -> bytes:
     return TOKEN_INDEX_PREFIX + account_id + b'_'
 
 
-@public
+@public(safe=True)
 def isOfEra(account: UInt160, era_id: bytes) -> bool:
     assert validate_address(account), 'address must be a valid 20 byte UInt160'
     era_id_string = base64_encode(era_id)
@@ -795,13 +795,13 @@ def create_era(organization: bytes, date: bytes, no_of_winners: int, mint_fee: i
     return era_id_int
 
 
-@public
+@public(safe=True)
 def get_era_json(era_id: bytes) -> Dict[str, Any]:
     era: Era = get_era(era_id)
     return era.export()
 
 
-@public
+@public(safe=True)
 def get_era(era_id: bytes) -> Era:
     era_bytes: bytes = get_era_raw(era_id)
     return cast(Era, deserialize(era_bytes))
@@ -811,7 +811,7 @@ def get_era_raw(era_id: bytes) -> bytes:
     return get(mk_era_key(era_id))
 
 
-@public
+@public(safe=True)
 def total_era() -> int:
     """
     Gets the total epoch count.  No
@@ -1138,7 +1138,7 @@ def makeTransferable(token_id: bytes) -> bool:
     return True
 
 
-@public
+@public(safe=True)
 def get_life(token_id: bytes) -> Life:
     """
     A factory method to get a life from storage
@@ -1149,7 +1149,7 @@ def get_life(token_id: bytes) -> Life:
     return cast(Life, deserialize(life_bytes))
 
 
-@public
+@public(safe=True)
 def get_life_json(token_id: bytes) -> Dict[str, Any]:
     """
     Gets a dict representation of the life's base stats
@@ -1160,7 +1160,7 @@ def get_life_json(token_id: bytes) -> Dict[str, Any]:
     return life.get_state()
 
 
-@public
+@public(safe=True)
 def get_life_json_flat(token_id: bytes) -> Dict[str, Any]:
     life: Life = get_life(token_id)
     return life.get_state_flat()
