@@ -8,7 +8,7 @@ from boa3.builtin.interop.stdlib import serialize, deserialize, itoa, base64_enc
 from boa3.builtin.interop.storage import delete, get, put, find, get_context, get_read_only_context
 from boa3.builtin.interop.storage.findoptions import FindOptions
 from boa3.builtin.interop.iterator import Iterator
-from boa3.builtin.type import UInt160
+from boa3.builtin.type import UInt160, ByteString
 
 # -------------------------------------------
 # METADATA
@@ -72,7 +72,7 @@ on_transfer = CreateNewEvent(
         ('from_addr', Union[UInt160, None]),
         ('to_addr', Union[UInt160, None]),
         ('amount', int),
-        ('token_id', bytes)
+        ('token_id', ByteString)
     ],
     'Transfer'
 )
@@ -123,7 +123,7 @@ def setEraFee(era_fee: int) -> bool:
 # NEP-11 Methods
 # -------------------------------------------
 
-@public
+@public(safe=True)
 def symbol() -> str:
     """
     Gets the symbols of the token.
@@ -133,7 +133,7 @@ def symbol() -> str:
     return TOKEN_SYMBOL
 
 
-@public
+@public(safe=True)
 def decimals() -> int:
     """
     Gets the amount of decimals used by the token.
@@ -146,7 +146,7 @@ def decimals() -> int:
     return TOKEN_DECIMALS
 
 
-@public
+@public(safe=True)
 def totalSupply() -> int:
     """
     Gets the total token supply deployed in the system.
@@ -162,7 +162,7 @@ def totalSupply() -> int:
     return total.to_int()
 
 
-@public
+@public(safe=True)
 def balanceOf(owner: UInt160) -> int:
     """
     Get the current balance of an address
@@ -179,7 +179,7 @@ def balanceOf(owner: UInt160) -> int:
     return user.get_balance_of()
 
 
-@public
+@public(safe=True)
 def tokensOf(owner: UInt160) -> Iterator:
     """
     Get all of the token ids owned by the specified address
@@ -197,7 +197,7 @@ def tokensOf(owner: UInt160) -> Iterator:
 
 
 @public
-def transfer(to: UInt160, token_id: bytes, data: Any) -> bool:
+def transfer(to: UInt160, token_id: ByteString, data: Any) -> bool:
     """
     Transfers the token with id token_id to address to
 
@@ -278,8 +278,8 @@ def post_transfer(token_owner: Union[UInt160, None], to: Union[UInt160, None], t
             pass
 
 
-@public
-def ownerOf(token_id: bytes) -> UInt160:
+@public(safe=True)
+def ownerOf(token_id: ByteString) -> UInt160:
     """
     Get the owner of the specified token.
 
@@ -295,7 +295,7 @@ def ownerOf(token_id: bytes) -> UInt160:
     return owner
 
 
-@public
+@public(safe=True)
 def tokens() -> Iterator:
     """
     Get all tokens minted by the contract
@@ -307,8 +307,8 @@ def tokens() -> Iterator:
     return find(TOKEN_PREFIX, context, flags)
 
 
-@public
-def properties(token_id: bytes) -> Dict[str, Any]:
+@public(safe=True)
+def properties(token_id: ByteString) -> Dict[str, Any]:
     """
     Get the properties of a token.
 
