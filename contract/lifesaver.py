@@ -3,7 +3,7 @@ from boa3.builtin import contract, CreateNewEvent, NeoMetadata, metadata, public
 from boa3.builtin.contract import abort
 from boa3.builtin.interop.blockchain import get_contract, Transaction
 from boa3.builtin.interop.contract import call_contract, update_contract, GAS
-from boa3.builtin.interop.runtime import time, check_witness, script_container, calling_script_hash, executing_script_hash
+from boa3.builtin.interop.runtime import time, check_witness, script_container, calling_script_hash, executing_script_hash, get_random
 from boa3.builtin.interop.stdlib import serialize, deserialize, itoa, base64_encode, base64_decode
 from boa3.builtin.interop.storage import delete, get, put, find, get_context, get_read_only_context
 from boa3.builtin.interop.storage.findoptions import FindOptions
@@ -690,8 +690,6 @@ class Era:
         self._mint_fee: int = mint_fee
         self._era_id: bytes = (total_era() + 1).to_bytes()
         self._total_supply: int = 0
-        self._winners_collection_id: int = 0
-        self._holders_collection_id: int = 0
         self._reward: int = getEraFee()
         self._status: int = 0
 
@@ -719,12 +717,6 @@ class Era:
     def get_no_of_winners(self) -> int:
         return self._no_of_winners
 
-    def get_winners_collection_id(self) -> int:
-        return self._winners_collection_id
-
-    def get_holders_collection_id(self) -> int:
-        return self._holders_collection_id
-
     def get_mint_fee(self) -> int:
         return self._mint_fee
 
@@ -751,8 +743,6 @@ class Era:
             'date': self._date,
             'eraId': self._era_id,
             'winnersNumber': self._no_of_winners,
-            'holdersCollectionId': self._holders_collection_id,
-            'winnersCollectionId': self._winners_collection_id,
             'status': self.get_status(),
             'reward': self.get_reward(),
             'mintFee': self.get_mint_fee(),
@@ -768,16 +758,8 @@ class Era:
         self._reward = self._reward + amount
         return self._reward
 
-    def increment_status(self) -> int:
+    def increment_status(self) -> bool:
         self._status = self._status + 1
-        return self._status
-
-    def set_holders_collection_id(self, id: int) -> bool:
-        self._holders_collection_id = id
-        return True
-
-    def set_winners_collection_id(self, id: int) -> bool:
-        self._winners_collection_id = id
         return True
 
 
@@ -848,17 +830,6 @@ def end_era(era_id: bytes) -> bool:
     assert era_to_end.get_total_supply() >= era_to_end.get_no_of_winners(), 'Not enough era NFT owners to end era'
     
     era_to_end.increment_status()
-
-    description_str: str = 'Holders of LifeSaver NFT of Era #' + era_id.to_str() + '.'
-    collection_type_str: str = 'UInt160'
-    extra_str: str = 'Proudly sponsored by: ' + era_to_end.get_organization().to_str() + '.'
-    description: bytes = serialize(description_str)
-    collection_type: bytes = serialize(collection_type_str)
-    extra: bytes = serialize(extra_str)
-    era_holders : list[UInt160] = createListOfEraAccounts(era_id)
-
-    era_holders_collection_id: int = Collection.create_collection(description, collection_type, extra, era_holders)
-    era_to_end.set_holders_collection_id(era_holders_collection_id)
     save_era(era_to_end)
 
     return True
@@ -875,7 +846,6 @@ def pay_winners(era_id: bytes) -> bool:
     :return: a boolean indicating success
     """
     era_to_pay: Era = get_era(era_id)
-    era_to_pay_holders_collection_id: int = era_to_pay.get_holders_collection_id()
     reward_pool : int = era_to_pay.get_reward()
     number_of_winners: int = era_to_pay.get_no_of_winners()
     tx = cast(Transaction, script_container)
@@ -883,34 +853,45 @@ def pay_winners(era_id: bytes) -> bool:
     user: User = get_user(tx.sender)
     is_era_admin: bool = era_to_pay.get_admin() == tx.sender
     can_manage_era: bool = user.can_manage_era()
-    can_pay_winners: bool = can_manage_era or is_era_admin
+    is_authorized: bool = can_manage_era or is_era_admin
 
     assert era_to_pay.can_pay_winners(), 'Inappropriate Era status'
-    assert can_pay_winners, 'User Permission Denied'
-    
-    winners: List[bytes] = Collection.sample_from_collection(era_to_pay_holders_collection_id, number_of_winners)
+    assert is_authorized, 'User Permission Denied'
 
-    description_str: str = 'Winners of LifeSaver Raffle of Era #' + era_id.to_str() + '.'
-    collection_type_str: str = 'UInt160'
-    extra_str: str = 'Proudly sponsored by: ' + era_to_pay.get_organization().to_str() + '.'
-    description: bytes = serialize(description_str)
-    collection_type: bytes = serialize(collection_type_str)
-    extra: bytes = serialize(extra_str)
-    era_winners_collection_id: int = Collection.create_collection(description, collection_type, extra, winners)
-    
-    era_to_pay.set_winners_collection_id(era_winners_collection_id)
     era_to_pay.increment_status()
     save_era(era_to_pay)
 
-    amount_payable = reward_pool // number_of_winners
-    for winner in winners:
-        winner_uint160 = UInt160(winner)
+    holders = createListOfEraAccounts(era_id)
+    
+    for x in range(number_of_winners):
+        idx: int = rand_between_internal(0, len(holders) - 1)
+        winner: UInt160 = holders[idx]
+        amount_payable = reward_pool // number_of_winners
         call_contract(GAS, 'transfer',
-                    [executing_script_hash, winner_uint160, amount_payable, None])
+                    [executing_script_hash, winner, amount_payable, None])
     
 
     return True
 
+
+def rand_between_internal(start: int, end: int) -> int:
+    """
+    Samples from a random data stream and returns a uniform random integer between start and end inclusively.
+    This method support both positive and negative starting and ending values so long as start < end.
+    :param start: the starting integer
+    :param end: the ending integer
+    :return: a random integer of range start-end
+    """
+    raw_entropy: bytes = get_random().to_bytes()
+    entropy: bytes = raw_entropy[0:8]
+    max_entropy: int = 2 ** (len(entropy) * 8)
+    half_max_entropy: int = (max_entropy // 2)
+    entropy_int: int = entropy.to_int()
+    u_entropy_int: int = entropy_int + half_max_entropy
+
+    numerator: int = ((end + 1) - start) * u_entropy_int
+
+    return (numerator // max_entropy) + start
 
 
 def save_era(era: Era) -> bool:
@@ -1188,20 +1169,3 @@ def save_life(life: Life) -> bool:
 
 def mk_token_key(token_id: bytes) -> bytes:
     return TOKEN_PREFIX + token_id
-
-
-# ############INTERFACES###########
-# ############INTERFACES###########
-# ############INTERFACES###########
-
-
-@contract('0xacf2aa5d0899e860eebd8b8a5454aa3017543848')
-class Collection:
-
-    @staticmethod
-    def create_collection(description: bytes, collection_type: bytes, extra: bytes,  vals: [bytes]) -> int:
-        pass
-
-    @staticmethod
-    def sample_from_collection(collection_id: int, samples: int) -> List[bytes]:
-        pass
