@@ -4,15 +4,51 @@
     "abi": {
         "methods": [
             {
+                "name": "isTokenSupported",
+                "offset": 0,
+                "parameters": [
+                    {
+                        "name": "token",
+                        "type": "Hash160"
+                    }
+                ],
+                "returntype": "Boolean",
+                "safe": false
+            },
+            {
+                "name": "supportToken",
+                "offset": 141,
+                "parameters": [
+                    {
+                        "name": "token",
+                        "type": "Hash160"
+                    }
+                ],
+                "returntype": "Boolean",
+                "safe": false
+            },
+            {
+                "name": "invalidateToken",
+                "offset": 340,
+                "parameters": [
+                    {
+                        "name": "token",
+                        "type": "Hash160"
+                    }
+                ],
+                "returntype": "Boolean",
+                "safe": false
+            },
+            {
                 "name": "getEraFee",
-                "offset": 37,
+                "offset": 573,
                 "parameters": [],
                 "returntype": "Integer",
                 "safe": true
             },
             {
                 "name": "setEraFee",
-                "offset": 60,
+                "offset": 596,
                 "parameters": [
                     {
                         "name": "era_fee",
@@ -24,28 +60,28 @@
             },
             {
                 "name": "symbol",
-                "offset": 195,
+                "offset": 731,
                 "parameters": [],
                 "returntype": "String",
                 "safe": true
             },
             {
                 "name": "decimals",
-                "offset": 197,
+                "offset": 733,
                 "parameters": [],
                 "returntype": "Integer",
                 "safe": true
             },
             {
                 "name": "totalSupply",
-                "offset": 199,
+                "offset": 735,
                 "parameters": [],
                 "returntype": "Integer",
                 "safe": true
             },
             {
                 "name": "balanceOf",
-                "offset": 235,
+                "offset": 771,
                 "parameters": [
                     {
                         "name": "owner",
@@ -57,7 +93,7 @@
             },
             {
                 "name": "tokensOf",
-                "offset": 293,
+                "offset": 829,
                 "parameters": [
                     {
                         "name": "owner",
@@ -69,7 +105,7 @@
             },
             {
                 "name": "transfer",
-                "offset": 351,
+                "offset": 887,
                 "parameters": [
                     {
                         "name": "to",
@@ -89,7 +125,7 @@
             },
             {
                 "name": "ownerOf",
-                "offset": 791,
+                "offset": 1327,
                 "parameters": [
                     {
                         "name": "token_id",
@@ -101,14 +137,14 @@
             },
             {
                 "name": "tokens",
-                "offset": 812,
+                "offset": 1348,
                 "parameters": [],
                 "returntype": "InteropInterface",
                 "safe": true
             },
             {
                 "name": "properties",
-                "offset": 833,
+                "offset": 1369,
                 "parameters": [
                     {
                         "name": "token_id",
@@ -120,7 +156,7 @@
             },
             {
                 "name": "_deploy",
-                "offset": 4347,
+                "offset": 5510,
                 "parameters": [
                     {
                         "name": "data",
@@ -136,7 +172,7 @@
             },
             {
                 "name": "onNEP11Payment",
-                "offset": 882,
+                "offset": 1418,
                 "parameters": [
                     {
                         "name": "from_address",
@@ -160,7 +196,7 @@
             },
             {
                 "name": "onNEP17Payment",
-                "offset": 887,
+                "offset": 1423,
                 "parameters": [
                     {
                         "name": "from_address",
@@ -180,14 +216,14 @@
             },
             {
                 "name": "total_accounts",
-                "offset": 1265,
+                "offset": 1819,
                 "parameters": [],
                 "returntype": "Integer",
                 "safe": true
             },
             {
                 "name": "offline_mint",
-                "offset": 1302,
+                "offset": 1856,
                 "parameters": [
                     {
                         "name": "era_id",
@@ -203,7 +239,7 @@
             },
             {
                 "name": "update",
-                "offset": 1406,
+                "offset": 1960,
                 "parameters": [
                     {
                         "name": "script",
@@ -223,7 +259,7 @@
             },
             {
                 "name": "get_user_json",
-                "offset": 1815,
+                "offset": 2369,
                 "parameters": [
                     {
                         "name": "address",
@@ -235,7 +271,7 @@
             },
             {
                 "name": "get_user",
-                "offset": 1829,
+                "offset": 2383,
                 "parameters": [
                     {
                         "name": "address",
@@ -247,7 +283,7 @@
             },
             {
                 "name": "isOfEra",
-                "offset": 2053,
+                "offset": 2607,
                 "parameters": [
                     {
                         "name": "account",
@@ -262,8 +298,24 @@
                 "safe": true
             },
             {
+                "name": "getEraReward",
+                "offset": 3086,
+                "parameters": [
+                    {
+                        "name": "token",
+                        "type": "Hash160"
+                    },
+                    {
+                        "name": "era_id",
+                        "type": "ByteArray"
+                    }
+                ],
+                "returntype": "Integer",
+                "safe": false
+            },
+            {
                 "name": "set_user_permissions",
-                "offset": 2529,
+                "offset": 3433,
                 "parameters": [
                     {
                         "name": "user",
@@ -279,7 +331,7 @@
             },
             {
                 "name": "get_era_json",
-                "offset": 2716,
+                "offset": 3620,
                 "parameters": [
                     {
                         "name": "era_id",
@@ -291,7 +343,7 @@
             },
             {
                 "name": "get_era",
-                "offset": 2730,
+                "offset": 3634,
                 "parameters": [
                     {
                         "name": "era_id",
@@ -303,14 +355,14 @@
             },
             {
                 "name": "total_era",
-                "offset": 2813,
+                "offset": 3717,
                 "parameters": [],
                 "returntype": "Integer",
                 "safe": true
             },
             {
                 "name": "end_era",
-                "offset": 2849,
+                "offset": 3753,
                 "parameters": [
                     {
                         "name": "era_id",
@@ -322,7 +374,7 @@
             },
             {
                 "name": "pay_winners",
-                "offset": 3062,
+                "offset": 3966,
                 "parameters": [
                     {
                         "name": "era_id",
@@ -334,7 +386,7 @@
             },
             {
                 "name": "makeTransferable",
-                "offset": 3991,
+                "offset": 5154,
                 "parameters": [
                     {
                         "name": "token_id",
@@ -346,7 +398,7 @@
             },
             {
                 "name": "get_life",
-                "offset": 4158,
+                "offset": 5321,
                 "parameters": [
                     {
                         "name": "token_id",
@@ -358,7 +410,7 @@
             },
             {
                 "name": "get_life_json",
-                "offset": 4212,
+                "offset": 5375,
                 "parameters": [
                     {
                         "name": "token_id",
@@ -370,7 +422,7 @@
             },
             {
                 "name": "get_life_json_flat",
-                "offset": 4226,
+                "offset": 5389,
                 "parameters": [
                     {
                         "name": "token_id",
@@ -382,30 +434,13 @@
             },
             {
                 "name": "_initialize",
-                "offset": 4551,
+                "offset": 5714,
                 "parameters": [],
                 "returntype": "Void",
                 "safe": false
             }
         ],
         "events": [
-            {
-                "name": "DonationDeposit",
-                "parameters": [
-                    {
-                        "name": "account",
-                        "type": "Hash160"
-                    },
-                    {
-                        "name": "donation_quantity",
-                        "type": "Integer"
-                    },
-                    {
-                        "name": "era",
-                        "type": "ByteArray"
-                    }
-                ]
-            },
             {
                 "name": "Transfer",
                 "parameters": [
@@ -423,6 +458,23 @@
                     },
                     {
                         "name": "token_id",
+                        "type": "ByteArray"
+                    }
+                ]
+            },
+            {
+                "name": "DonationDeposit",
+                "parameters": [
+                    {
+                        "name": "account",
+                        "type": "Hash160"
+                    },
+                    {
+                        "name": "donation_quantity",
+                        "type": "Integer"
+                    },
+                    {
+                        "name": "era",
                         "type": "ByteArray"
                     }
                 ]

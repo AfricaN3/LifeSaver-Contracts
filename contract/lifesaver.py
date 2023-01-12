@@ -1,5 +1,5 @@
 from typing import Any, Dict, List, Union, cast
-from boa3.builtin import contract, CreateNewEvent, NeoMetadata, metadata, public
+from boa3.builtin import CreateNewEvent, NeoMetadata, metadata, public
 from boa3.builtin.contract import abort
 from boa3.builtin.interop.blockchain import get_contract, Transaction
 from boa3.builtin.interop.contract import call_contract, update_contract, GAS
@@ -45,6 +45,9 @@ TOKEN_DECIMALS = 0
 # Stores the total token count
 TOKEN_COUNT: bytes = b'!TOKEN_COUNT'
 
+# Supported tokens
+SUPPORTED_TOKENS_SCRIPT_HASH = 'tok/'
+
 ERA_FEE_KEY: bytes = b'ERA_FEE'
 # Initial fee = 100 GAS
 INITIAL_ERA_FEE = 10_000_000_000
@@ -54,6 +57,9 @@ ERA_COUNT: bytes = b'ERA_COUNT'
 
 # The presence of an era for a wallet
 ERA_PRESENCE = 'ep/'
+
+# The rewards of an era for a token
+ERA_TOKEN_REWARDS = 'etr/'
 
 # Stores the total account count
 ACCOUNT_COUNT: bytes = b'!ACCOUNT_COUNT'
@@ -97,6 +103,34 @@ on_era_created = CreateNewEvent(
 # -------------------------------------------
 # contract Methods
 # -------------------------------------------
+
+@public
+def isTokenSupported(token: UInt160) -> bool:
+    assert validate_address(token), 'token must be a valid 20 byte UInt160'
+    token64 = base64_encode(token)
+    return get_read_only_context().create_map(SUPPORTED_TOKENS_SCRIPT_HASH).get(token64).to_bool()
+
+
+@public
+def supportToken(token: UInt160) -> bool:
+    assert validate_address(token), 'token must be a valid 20 byte UInt160'
+    tx = cast(Transaction, script_container)
+    user: User = get_user(tx.sender)
+    assert user.get_contract_upgrade(), 'User Permission Denied'
+    token64 = base64_encode(token)
+    get_context().create_map(SUPPORTED_TOKENS_SCRIPT_HASH).put(token64, True)
+    return True
+
+@public
+def invalidateToken(token: UInt160) -> bool:
+    assert validate_address(token), 'token must be a valid 20 byte UInt160'
+    tx = cast(Transaction, script_container)
+    user: User = get_user(tx.sender)
+    assert user.get_contract_upgrade(), 'User Permission Denied'
+    token64 = base64_encode(token)
+    get_context().create_map(SUPPORTED_TOKENS_SCRIPT_HASH).delete(token64)
+    return True
+
 
 def validate_address(address: UInt160) -> bool:
     if not isinstance(address, UInt160):
@@ -395,12 +429,12 @@ def onNEP17Payment(from_address: UInt160, amount: int, data: Any):
 
     transfer_data = cast(list, data)
     action_type = cast(str, transfer_data[0])
+    token: UInt160 = calling_script_hash
 
     if action_type == ACTION_DONATE:
-        if calling_script_hash != GAS:
-            abort()
+        assert isTokenSupported(token), 'Token is not supported'
         era_id: bytes = cast(bytes, transfer_data[1])
-        donate_to_era(era_id, amount, from_address)   
+        donate_to_era(era_id, amount, from_address, token)   
     elif action_type == ACTION_CREATE_ERA:
         if calling_script_hash != GAS:
             abort()
@@ -654,6 +688,25 @@ def removeEraFromAccount(account: UInt160, era_id: bytes) -> bool:
     get_context().create_map(ERA_PRESENCE + era_id_string + '/').delete(account64)
     return True
 
+
+@public
+def getEraReward(token: UInt160, era_id: bytes) -> int:
+    assert validate_address(token), 'token must be a valid 20 byte UInt160'
+
+    era_id_string: str = era_id.to_str()
+    token64 = base64_encode(token)
+    return get_read_only_context().create_map(ERA_TOKEN_REWARDS + era_id_string + '/').get(token64).to_int()
+
+def updateEraReward(token: UInt160, era_id: bytes, reward: int) -> bool:
+    assert validate_address(token), 'token must be a valid 20 byte UInt160'
+    assert reward >= 0, 'reward must be non-negative'
+
+    era_id_string: str = era_id.to_str()
+    token64 = base64_encode(token)
+    get_context().create_map(ERA_TOKEN_REWARDS + era_id_string + '/').put(token64, reward)
+    return True
+
+
 @public
 def set_user_permissions(user: UInt160, permissions: Dict[str, bool]) -> bool:
     """
@@ -690,7 +743,6 @@ class Era:
         self._mint_fee: int = mint_fee
         self._era_id: bytes = (total_era() + 1).to_bytes()
         self._total_supply: int = 0
-        self._reward: int = getEraFee()
         self._status: int = 0
 
     def can_mint(self) -> bool:
@@ -730,9 +782,6 @@ class Era:
         """
         return self._status
 
-    def get_reward(self) -> int:
-        return self._reward
-
     def get_total_supply(self) -> int:
         return self._total_supply
 
@@ -744,7 +793,6 @@ class Era:
             'eraId': self._era_id,
             'winnersNumber': self._no_of_winners,
             'status': self.get_status(),
-            'reward': self.get_reward(),
             'mintFee': self.get_mint_fee(),
             'totalSupply': self.get_total_supply()
         }
@@ -754,9 +802,6 @@ class Era:
         self._total_supply = self._total_supply + 1
         return self._total_supply
 
-    def increment_reward(self, amount: int) -> int:
-        self._reward = self._reward + amount
-        return self._reward
 
     def increment_status(self) -> bool:
         self._status = self._status + 1
@@ -846,7 +891,7 @@ def pay_winners(era_id: bytes) -> bool:
     :return: a boolean indicating success
     """
     era_to_pay: Era = get_era(era_id)
-    reward_pool : int = era_to_pay.get_reward()
+    era_id_string: str = era_id.to_str()
     number_of_winners: int = era_to_pay.get_no_of_winners()
     tx = cast(Transaction, script_container)
 
@@ -862,13 +907,21 @@ def pay_winners(era_id: bytes) -> bool:
     save_era(era_to_pay)
 
     holders = createListOfEraAccounts(era_id)
+    era_reward_key = ERA_TOKEN_REWARDS + era_id_string + '/'
+    token_balances = find(era_reward_key)
     
     for x in range(number_of_winners):
         idx: int = rand_between_internal(0, len(holders) - 1)
         winner: UInt160 = holders[idx]
-        amount_payable = reward_pool // number_of_winners
-        call_contract(GAS, 'transfer',
-                    [executing_script_hash, winner, amount_payable, None])
+
+        while token_balances.next():
+            token64 = cast(str, token_balances.value[0])[len(era_reward_key):]
+            token = UInt160(base64_decode(token64))
+            quantity = cast(bytes, token_balances.value[1]).to_int()
+            if quantity > 0:
+                amount_payable = quantity // number_of_winners
+                call_contract(token, 'transfer',
+                            [executing_script_hash, winner, amount_payable, None])
     
 
     return True
@@ -903,21 +956,23 @@ def save_era(era: Era) -> bool:
 def mk_era_key(era_id: bytes) -> bytes:
     return ERA_PREFIX + era_id
 
-def donate_to_era(era_id: bytes, amount: int, donor: UInt160) -> bool:
+def donate_to_era(era_id: bytes, amount: int, donor: UInt160, token: UInt160) -> bool:
     """
     Make donation to an Era - internal
 
     :param era_id: the era id to donate to
     :param amount: the amount of GAS donated
     :param donor: the address of the account that donated
+    :param token: the token that was donated
     :type owner: UInt160
     :return: bool to know if donation was successful
     """
     era_donated: Era = get_era(era_id)
     assert era_donated.can_donate(), 'Donating to this Era is not allowed'
-    era_donated.increment_reward(amount)
-    save_era(era_donated)
-    if amount == era_donated.get_mint_fee():
+    current_reward = getEraReward(token, era_id)
+    new_reward = current_reward + amount
+    updateEraReward(token, era_id, new_reward)
+    if token == GAS and amount == era_donated.get_mint_fee():
         internal_mint(era_id, donor)
     on_donation_deposit(donor, amount, era_id)
     return True
