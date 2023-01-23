@@ -156,7 +156,7 @@
             },
             {
                 "name": "_deploy",
-                "offset": 5510,
+                "offset": 5513,
                 "parameters": [
                     {
                         "name": "data",
@@ -232,6 +232,10 @@
                     {
                         "name": "account",
                         "type": "Hash160"
+                    },
+                    {
+                        "name": "archetype",
+                        "type": "Integer"
                     }
                 ],
                 "returntype": "ByteArray",
@@ -239,7 +243,7 @@
             },
             {
                 "name": "update",
-                "offset": 1960,
+                "offset": 1961,
                 "parameters": [
                     {
                         "name": "script",
@@ -259,7 +263,7 @@
             },
             {
                 "name": "get_user_json",
-                "offset": 2369,
+                "offset": 2371,
                 "parameters": [
                     {
                         "name": "address",
@@ -271,7 +275,7 @@
             },
             {
                 "name": "get_user",
-                "offset": 2383,
+                "offset": 2385,
                 "parameters": [
                     {
                         "name": "address",
@@ -283,7 +287,7 @@
             },
             {
                 "name": "isOfEra",
-                "offset": 2607,
+                "offset": 2609,
                 "parameters": [
                     {
                         "name": "account",
@@ -299,7 +303,7 @@
             },
             {
                 "name": "getEraReward",
-                "offset": 3086,
+                "offset": 3088,
                 "parameters": [
                     {
                         "name": "token",
@@ -315,7 +319,7 @@
             },
             {
                 "name": "set_user_permissions",
-                "offset": 3433,
+                "offset": 3435,
                 "parameters": [
                     {
                         "name": "user",
@@ -331,7 +335,7 @@
             },
             {
                 "name": "get_era_json",
-                "offset": 3620,
+                "offset": 3622,
                 "parameters": [
                     {
                         "name": "era_id",
@@ -343,7 +347,7 @@
             },
             {
                 "name": "get_era",
-                "offset": 3634,
+                "offset": 3636,
                 "parameters": [
                     {
                         "name": "era_id",
@@ -355,14 +359,14 @@
             },
             {
                 "name": "total_era",
-                "offset": 3717,
+                "offset": 3719,
                 "parameters": [],
                 "returntype": "Integer",
                 "safe": true
             },
             {
                 "name": "end_era",
-                "offset": 3753,
+                "offset": 3755,
                 "parameters": [
                     {
                         "name": "era_id",
@@ -374,7 +378,7 @@
             },
             {
                 "name": "pay_winners",
-                "offset": 3966,
+                "offset": 3968,
                 "parameters": [
                     {
                         "name": "era_id",
@@ -386,7 +390,7 @@
             },
             {
                 "name": "makeTransferable",
-                "offset": 5154,
+                "offset": 5157,
                 "parameters": [
                     {
                         "name": "token_id",
@@ -398,7 +402,7 @@
             },
             {
                 "name": "get_life",
-                "offset": 5321,
+                "offset": 5324,
                 "parameters": [
                     {
                         "name": "token_id",
@@ -410,7 +414,7 @@
             },
             {
                 "name": "get_life_json",
-                "offset": 5375,
+                "offset": 5378,
                 "parameters": [
                     {
                         "name": "token_id",
@@ -422,7 +426,7 @@
             },
             {
                 "name": "get_life_json_flat",
-                "offset": 5389,
+                "offset": 5392,
                 "parameters": [
                     {
                         "name": "token_id",
@@ -434,7 +438,7 @@
             },
             {
                 "name": "_initialize",
-                "offset": 5714,
+                "offset": 5717,
                 "parameters": [],
                 "returntype": "Void",
                 "safe": false

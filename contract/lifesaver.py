@@ -68,6 +68,11 @@ ACCOUNT_COUNT: bytes = b'!ACCOUNT_COUNT'
 ACTION_DONATE = 'ACTION_DONATE'
 ACTION_CREATE_ERA = 'ACTION_CREATE_ERA'
 
+# Archeytpes
+DONOR = 'donor'
+ANGEL = 'angel'
+FAN = 'fan'
+
 # -------------------------------------------
 # Events
 # -------------------------------------------
@@ -468,7 +473,7 @@ def total_accounts() -> int:
 
 
 @public
-def offline_mint(era_id: bytes, account: UInt160) -> bytes:
+def offline_mint(era_id: bytes, account: UInt160, archetype: int) -> bytes:
     """
     mints a token from an era
     :param account: the account to mint to
@@ -483,7 +488,7 @@ def offline_mint(era_id: bytes, account: UInt160) -> bytes:
     can_mint: bool = can_mint_offline or is_era_admin
 
     assert can_mint, 'User Permission Denied'
-    return internal_mint(era_id, account)
+    return internal_mint(era_id, account, archetype)
 
 
 @public
@@ -504,7 +509,7 @@ def update(script: bytes, manifest: bytes, data: Any):
     update_contract(script, manifest, data)
 
 
-def internal_mint(era_id: bytes, owner: UInt160) -> bytes:
+def internal_mint(era_id: bytes, owner: UInt160, archetype: int) -> bytes:
     """
     Mint new token - internal
 
@@ -526,7 +531,7 @@ def internal_mint(era_id: bytes, owner: UInt160) -> bytes:
     token_id_int: int = (totalSupply() + 1)
     token_id_string: bytes = itoa(token_id_int)
     new_life: Life = Life()
-    new_life.generate(owner, token_id_string, era_id)
+    new_life.generate(owner, token_id_string, era_id, archetype)
 
     save_life(new_life)
     put(TOKEN_COUNT, token_id_int)
@@ -973,7 +978,7 @@ def donate_to_era(era_id: bytes, amount: int, donor: UInt160, token: UInt160) ->
     new_reward = current_reward + amount
     updateEraReward(token, era_id, new_reward)
     if token == GAS and amount == era_donated.get_mint_fee():
-        internal_mint(era_id, donor)
+        internal_mint(era_id, donor, 2)
     on_donation_deposit(donor, amount, era_id)
     return True
 
@@ -1008,6 +1013,7 @@ class Life:
         self._token_id: bytes = b''
         self._era_token_id: int = 0
         self._timestamp: int = 0
+        self._archetype: str = FAN
         self._era_id: bytes = b''
         self._owner: UInt160 = UInt160()
 
@@ -1016,11 +1022,12 @@ class Life:
             'owner': self._owner,
             'tokenId': self._token_id,
             'eraId': self._era_id,
-            'eraTokenId': self._era_token_id
+            'eraTokenId': self._era_token_id,
+            'archetype': self._archetype
         }
         return exported
 
-    def generate(self, owner: UInt160, token_id: bytes, era_id: bytes) -> bool:
+    def generate(self, owner: UInt160, token_id: bytes, era_id: bytes, archetype: int) -> bool:
         """
         Generates a Life's core features
         @return: boolean indicating success
@@ -1031,6 +1038,11 @@ class Life:
 
         # mint traits
         self._era_id = era_id
+        if archetype == 1:
+            self._archetype = DONOR
+        if archetype == 2:
+            self._archetype = ANGEL
+        
 
         # Generate a life token_id and set the owner
         self._owner = owner
@@ -1045,6 +1057,13 @@ class Life:
         @return: bytes representing the owner of the Life
         """
         return UInt160(self._owner)
+
+    def get_archetype(self) -> str:
+        """
+        Getter for the Life archetype
+        @return: bytes representing the archetype of the Life
+        """
+        return self._archetype
         
     def get_era_id(self) -> bytes:
         """
@@ -1063,11 +1082,12 @@ class Life:
     def get_state(self) -> Dict[str, Any]:
         """
         Gets the state of the life. This differs from an export in that it includes all secondary features like
-         timestamp.
+         timestamp and archetype.
         @return:
         """
         token_id_bytes: bytes = self._token_id
         era_id_bytes: bytes = self._era_id
+        archetype_str: str = self._archetype
 
         era_id_int: int = era_id_bytes.to_int()
         era: Era = get_era(era_id_bytes)
@@ -1078,11 +1098,12 @@ class Life:
                             'a blood drive event ' + '(' + itoa(era_id_int) + ' era). Holders participated in ' +
                             'a raffle (Sponsored by ' +  era_organization.to_str() + ').',
             'eraId': era_id_int,
-            'image': 'https://github.com/AfricaN3/LifeSaver-Contracts/blob/master/media/mascot.png',
+            'image': 'https://github.com/AfricaN3/LifeSaver-Contracts/blob/master/media/'+ archetype_str + '.png',
             'name': 'life',
             'owner': self._owner,
             'tokenId': token_id_bytes,
-            'tokenURI': 'https://github.com/AfricaN3/LifeSaver-Contracts/blob/master/media/mascot',
+            'archetype': archetype_str,
+            'tokenURI': 'https://github.com/AfricaN3/LifeSaver-Contracts/blob/master/media/'+ archetype_str,
         }
         return exported
 
@@ -1093,6 +1114,7 @@ class Life:
         """
         token_id_bytes: bytes = self._token_id
         era_id_bytes: bytes = self._era_id
+        archetype_str: str = self._archetype
 
         era_id_int: int = era_id_bytes.to_int()
         era: Era = get_era(era_id_bytes)
@@ -1102,13 +1124,17 @@ class Life:
             {
                 'trait_type': 'eraId',
                 'value': era_id_int
+            },
+            {
+                'trait_type': 'archetype',
+                'value': archetype_str
             }
         ]
 
         exported: Dict[str, Any] = {
             'name': 'life',
-            'image': 'https://github.com/AfricaN3/LifeSaver-Contracts/blob/master/media/mascot.png',
-            'tokenURI': 'https://github.com/AfricaN3/LifeSaver-Contracts/blob/master/media/mascot',
+            'image': 'https://github.com/AfricaN3/LifeSaver-Contracts/blob/master/media/'+ archetype_str + '.png',
+            'tokenURI': 'https://github.com/AfricaN3/LifeSaver-Contracts/blob/master/media/'+ archetype_str,
             'owner': self._owner,
             'tokenId': token_id_bytes.to_str(),
             'description': 'LifeSaver NFT #' + token_id_bytes.to_str() + '. This is a Soulbound token minted during ' + 
