@@ -441,14 +441,15 @@ def onNEP17Payment(from_address: UInt160, amount: int, data: Any):
         era_id: bytes = cast(bytes, transfer_data[1])
         donate_to_era(era_id, amount, from_address, token)   
     elif action_type == ACTION_CREATE_ERA:
-        if calling_script_hash != GAS:
-            abort()
-        assert amount == getEraFee(), 'amount is invalid for era creation'
+        assert token == GAS, 'token must be GAS for era creation'
+        era_fee: int =   getEraFee()  
+        assert amount == era_fee, 'amount is invalid for era creation'
         no_of_winners = cast(int, transfer_data[1])
         organization = cast(bytes, transfer_data[2])
         date = cast(bytes, transfer_data[3])
         mint_fee = cast(int, transfer_data[4])
-        create_era(organization, date, no_of_winners, mint_fee)
+        era_id: bytes = create_era(organization, date, no_of_winners, mint_fee)
+        updateEraReward(token, era_id, era_fee)
     else:
         abort()
         
@@ -813,7 +814,7 @@ class Era:
         return True
 
 
-def create_era(organization: bytes, date: bytes, no_of_winners: int, mint_fee: int) -> int:
+def create_era(organization: bytes, date: bytes, no_of_winners: int, mint_fee: int) -> bytes:
     tx = cast(Transaction, script_container)
     admin: UInt160 = tx.sender
 
@@ -824,7 +825,7 @@ def create_era(organization: bytes, date: bytes, no_of_winners: int, mint_fee: i
     save_era(new_era)
     put(ERA_COUNT, era_id)
     on_era_created(era_id_int, organization)
-    return era_id_int
+    return era_id
 
 
 @public(safe=True)
