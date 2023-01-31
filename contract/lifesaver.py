@@ -22,7 +22,7 @@ def manifest_metadata() -> NeoMetadata:
     """
     meta = NeoMetadata()
     meta.author = 'AfricaN3'
-    meta.description = 'The NFTs for Life Savers (to be changed)'
+    meta.description = 'Donate, save a life and mint LifeSaver NFTs'
     meta.email = 'hello@african3.com'
     meta.supported_standards = ['NEP-11']
     return meta

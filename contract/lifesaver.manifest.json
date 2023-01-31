@@ -467,19 +467,6 @@
                 ]
             },
             {
-                "name": "EraCreated",
-                "parameters": [
-                    {
-                        "name": "era",
-                        "type": "Integer"
-                    },
-                    {
-                        "name": "organization",
-                        "type": "ByteArray"
-                    }
-                ]
-            },
-            {
                 "name": "DonationDeposit",
                 "parameters": [
                     {
@@ -492,6 +479,19 @@
                     },
                     {
                         "name": "era",
+                        "type": "ByteArray"
+                    }
+                ]
+            },
+            {
+                "name": "EraCreated",
+                "parameters": [
+                    {
+                        "name": "era",
+                        "type": "Integer"
+                    },
+                    {
+                        "name": "organization",
                         "type": "ByteArray"
                     }
                 ]
@@ -511,7 +511,7 @@
     ],
     "extra": {
         "Author": "AfricaN3",
-        "Description": "The NFTs for Life Savers (to be changed)",
+        "Description": "Donate, save a life and mint LifeSaver NFTs",
         "Email": "hello@african3.com"
     }
 }
