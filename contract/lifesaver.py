@@ -460,7 +460,7 @@ def onNEP17Payment(from_address: UInt160, amount: int, data: Any):
 # -------------------------------------------
 
 
-@public(safe=True)
+@public(name='totalAccounts', safe=True)
 def total_accounts() -> int:
     """
     Gets the number of accounts.
@@ -473,7 +473,7 @@ def total_accounts() -> int:
     return total.to_int()
 
 
-@public
+@public(name='offlineMint')
 def offline_mint(era_id: bytes, account: UInt160, archetype: int) -> bytes:
     """
     mints a token from an era
@@ -621,7 +621,7 @@ class User:
         return self._permissions['contract_upgrade']
 
 
-@public(safe=True)
+@public(name='getUserJson', safe=True)
 def get_user_json(address: UInt160) -> Dict[str, Any]:
     """
     Gets the JSON representation of a user account
@@ -631,7 +631,7 @@ def get_user_json(address: UInt160) -> Dict[str, Any]:
     user: User = get_user(address)
     return user.export()
 
-@public(safe=True)
+@public(name='getUser', safe=True)
 def get_user(address: UInt160) -> User:
     """
     Gets a User instance
@@ -695,7 +695,7 @@ def removeEraFromAccount(account: UInt160, era_id: bytes) -> bool:
     return True
 
 
-@public
+@public(safe=True)
 def getEraReward(token: UInt160, era_id: bytes) -> int:
     assert validate_address(token), 'token must be a valid 20 byte UInt160'
 
@@ -713,7 +713,7 @@ def updateEraReward(token: UInt160, era_id: bytes, reward: int) -> bool:
     return True
 
 
-@public
+@public(name='setUserPermissions')
 def set_user_permissions(user: UInt160, permissions: Dict[str, bool]) -> bool:
     """
     Sets a user's permissions
@@ -750,6 +750,7 @@ class Era:
         self._era_id: bytes = (total_era() + 1).to_bytes()
         self._total_supply: int = 0
         self._status: int = 0
+        self._winners_paid: int = 0
 
     def can_mint(self) -> bool:
         return self._status == 0
@@ -758,7 +759,7 @@ class Era:
         return self._status <= 1
 
     def can_pay_winners(self) -> bool:
-        return self._status == 1
+        return self._status == 1 and self._winners_paid < self._no_of_winners
 
     def get_id(self) -> bytes:
         return self._era_id
@@ -774,6 +775,9 @@ class Era:
 
     def get_no_of_winners(self) -> int:
         return self._no_of_winners
+
+    def get_winners_paid(self) -> int:
+        return self._winners_paid
 
     def get_mint_fee(self) -> int:
         return self._mint_fee
@@ -808,9 +812,12 @@ class Era:
         self._total_supply = self._total_supply + 1
         return self._total_supply
 
-
     def increment_status(self) -> bool:
         self._status = self._status + 1
+        return True
+
+    def increment_winners_paid(self) -> bool:
+        self._winners_paid = self._winners_paid + 1
         return True
 
 
@@ -828,13 +835,13 @@ def create_era(organization: bytes, date: bytes, no_of_winners: int, mint_fee: i
     return era_id
 
 
-@public(safe=True)
+@public(name='getEraJson', safe=True)
 def get_era_json(era_id: bytes) -> Dict[str, Any]:
     era: Era = get_era(era_id)
     return era.export()
 
 
-@public(safe=True)
+@public(name='getEra', safe=True)
 def get_era(era_id: bytes) -> Era:
     era_bytes: bytes = get_era_raw(era_id)
     return cast(Era, deserialize(era_bytes))
@@ -844,7 +851,7 @@ def get_era_raw(era_id: bytes) -> bytes:
     return get(mk_era_key(era_id))
 
 
-@public(safe=True)
+@public(name='totalEra', safe=True)
 def total_era() -> int:
     """
     Gets the total epoch count.  No
@@ -859,7 +866,7 @@ def total_era() -> int:
     return total.to_int()
 
 
-@public
+@public(name='endEra')
 def end_era(era_id: bytes) -> bool:
     """
     Ends an era.
@@ -887,12 +894,11 @@ def end_era(era_id: bytes) -> bool:
 
 
 @public
-def pay_winners(era_id: bytes) -> bool:
+def payWinner(era_id: bytes) -> bool:
     """
     Carries out a raffle to reward NFT holders of a particular era.
 
-    This method randomly select winners for an era and also creates 
-    a collection of the winning addresses on the Collection contract
+    This method randomly select a winner for an era 
 
     :return: a boolean indicating success
     """
@@ -909,25 +915,27 @@ def pay_winners(era_id: bytes) -> bool:
     assert era_to_pay.can_pay_winners(), 'Inappropriate Era status'
     assert is_authorized, 'User Permission Denied'
 
-    era_to_pay.increment_status()
+    era_to_pay.increment_winners_paid()
+    if era_to_pay.get_no_of_winners() == era_to_pay.get_winners_paid():
+        era_to_pay.increment_status()
     save_era(era_to_pay)
 
     holders = createListOfEraAccounts(era_id)
     era_reward_key = ERA_TOKEN_REWARDS + era_id_string + '/'
     token_balances = find(era_reward_key)
     
-    for x in range(number_of_winners):
-        idx: int = rand_between_internal(0, len(holders) - 1)
-        winner: UInt160 = holders[idx]
+    
+    idx: int = rand_between_internal(0, len(holders) - 1)
+    winner: UInt160 = holders[idx]
 
-        while token_balances.next():
-            token64 = cast(str, token_balances.value[0])[len(era_reward_key):]
-            token = UInt160(base64_decode(token64))
-            quantity = cast(bytes, token_balances.value[1]).to_int()
-            if quantity > 0:
-                amount_payable = quantity // number_of_winners
-                call_contract(token, 'transfer',
-                            [executing_script_hash, winner, amount_payable, None])
+    while token_balances.next():
+        token64 = cast(str, token_balances.value[0])[len(era_reward_key):]
+        token = UInt160(base64_decode(token64))
+        quantity = cast(bytes, token_balances.value[1]).to_int()
+        if quantity > 0:
+            amount_payable = quantity // number_of_winners
+            call_contract(token, 'transfer',
+                        [executing_script_hash, winner, amount_payable, None])
     
 
     return True
@@ -1201,7 +1209,7 @@ def makeTransferable(token_id: bytes) -> bool:
     return True
 
 
-@public(safe=True)
+@public(name='getLife', safe=True)
 def get_life(token_id: bytes) -> Life:
     """
     A factory method to get a life from storage
@@ -1212,7 +1220,7 @@ def get_life(token_id: bytes) -> Life:
     return cast(Life, deserialize(life_bytes))
 
 
-@public(safe=True)
+@public(name='getLifeJson', safe=True)
 def get_life_json(token_id: bytes) -> Dict[str, Any]:
     """
     Gets a dict representation of the life's base stats
@@ -1223,7 +1231,7 @@ def get_life_json(token_id: bytes) -> Dict[str, Any]:
     return life.get_state()
 
 
-@public(safe=True)
+@public(name='getLifeJsonFlat', safe=True)
 def get_life_json_flat(token_id: bytes) -> Dict[str, Any]:
     life: Life = get_life(token_id)
     return life.get_state_flat()

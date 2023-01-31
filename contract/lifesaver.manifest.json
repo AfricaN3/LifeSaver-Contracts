@@ -156,7 +156,7 @@
             },
             {
                 "name": "_deploy",
-                "offset": 5513,
+                "offset": 5485,
                 "parameters": [
                     {
                         "name": "data",
@@ -215,15 +215,15 @@
                 "safe": false
             },
             {
-                "name": "total_accounts",
-                "offset": 1819,
+                "name": "totalAccounts",
+                "offset": 1871,
                 "parameters": [],
                 "returntype": "Integer",
                 "safe": true
             },
             {
-                "name": "offline_mint",
-                "offset": 1856,
+                "name": "offlineMint",
+                "offset": 1908,
                 "parameters": [
                     {
                         "name": "era_id",
@@ -243,7 +243,7 @@
             },
             {
                 "name": "update",
-                "offset": 1961,
+                "offset": 2013,
                 "parameters": [
                     {
                         "name": "script",
@@ -262,8 +262,8 @@
                 "safe": false
             },
             {
-                "name": "get_user_json",
-                "offset": 2371,
+                "name": "getUserJson",
+                "offset": 2423,
                 "parameters": [
                     {
                         "name": "address",
@@ -274,8 +274,8 @@
                 "safe": true
             },
             {
-                "name": "get_user",
-                "offset": 2385,
+                "name": "getUser",
+                "offset": 2437,
                 "parameters": [
                     {
                         "name": "address",
@@ -287,7 +287,7 @@
             },
             {
                 "name": "isOfEra",
-                "offset": 2609,
+                "offset": 2661,
                 "parameters": [
                     {
                         "name": "account",
@@ -303,7 +303,7 @@
             },
             {
                 "name": "getEraReward",
-                "offset": 3088,
+                "offset": 3140,
                 "parameters": [
                     {
                         "name": "token",
@@ -315,11 +315,11 @@
                     }
                 ],
                 "returntype": "Integer",
-                "safe": false
+                "safe": true
             },
             {
-                "name": "set_user_permissions",
-                "offset": 3435,
+                "name": "setUserPermissions",
+                "offset": 3487,
                 "parameters": [
                     {
                         "name": "user",
@@ -334,8 +334,8 @@
                 "safe": false
             },
             {
-                "name": "get_era_json",
-                "offset": 3622,
+                "name": "getEraJson",
+                "offset": 3674,
                 "parameters": [
                     {
                         "name": "era_id",
@@ -346,8 +346,8 @@
                 "safe": true
             },
             {
-                "name": "get_era",
-                "offset": 3636,
+                "name": "getEra",
+                "offset": 3688,
                 "parameters": [
                     {
                         "name": "era_id",
@@ -358,15 +358,15 @@
                 "safe": true
             },
             {
-                "name": "total_era",
-                "offset": 3719,
+                "name": "totalEra",
+                "offset": 3771,
                 "parameters": [],
                 "returntype": "Integer",
                 "safe": true
             },
             {
-                "name": "end_era",
-                "offset": 3755,
+                "name": "endEra",
+                "offset": 3807,
                 "parameters": [
                     {
                         "name": "era_id",
@@ -377,8 +377,8 @@
                 "safe": false
             },
             {
-                "name": "pay_winners",
-                "offset": 3968,
+                "name": "payWinner",
+                "offset": 4020,
                 "parameters": [
                     {
                         "name": "era_id",
@@ -390,7 +390,7 @@
             },
             {
                 "name": "makeTransferable",
-                "offset": 5157,
+                "offset": 5129,
                 "parameters": [
                     {
                         "name": "token_id",
@@ -401,8 +401,8 @@
                 "safe": false
             },
             {
-                "name": "get_life",
-                "offset": 5324,
+                "name": "getLife",
+                "offset": 5296,
                 "parameters": [
                     {
                         "name": "token_id",
@@ -413,8 +413,8 @@
                 "safe": true
             },
             {
-                "name": "get_life_json",
-                "offset": 5378,
+                "name": "getLifeJson",
+                "offset": 5350,
                 "parameters": [
                     {
                         "name": "token_id",
@@ -425,8 +425,8 @@
                 "safe": true
             },
             {
-                "name": "get_life_json_flat",
-                "offset": 5392,
+                "name": "getLifeJsonFlat",
+                "offset": 5364,
                 "parameters": [
                     {
                         "name": "token_id",
@@ -438,7 +438,7 @@
             },
             {
                 "name": "_initialize",
-                "offset": 5717,
+                "offset": 5689,
                 "parameters": [],
                 "returntype": "Void",
                 "safe": false
