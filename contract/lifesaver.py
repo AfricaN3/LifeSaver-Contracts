@@ -1097,6 +1097,7 @@ class Life:
         token_id_bytes: bytes = self._token_id
         era_id_bytes: bytes = self._era_id
         archetype_str: str = self._archetype
+        timestamp: int = self._timestamp
 
         era_id_int: int = era_id_bytes.to_int()
         era: Era = get_era(era_id_bytes)
@@ -1112,6 +1113,7 @@ class Life:
             'owner': self._owner,
             'tokenId': token_id_bytes,
             'archetype': archetype_str,
+            'timestamp': timestamp,
             'tokenURI': 'https://github.com/AfricaN3/LifeSaver-Contracts/blob/master/media/'+ archetype_str,
         }
         return exported
@@ -1124,6 +1126,7 @@ class Life:
         token_id_bytes: bytes = self._token_id
         era_id_bytes: bytes = self._era_id
         archetype_str: str = self._archetype
+        timestamp: int = self._timestamp
 
         era_id_int: int = era_id_bytes.to_int()
         era: Era = get_era(era_id_bytes)
@@ -1133,6 +1136,10 @@ class Life:
             {
                 'trait_type': 'eraId',
                 'value': era_id_int
+            },
+            {
+                'trait_type': 'timestamp',
+                'value': timestamp
             },
             {
                 'trait_type': 'archetype',
@@ -1174,7 +1181,7 @@ class Life:
         Setter for the life timestamp
         @return: Boolean indicating success
         """
-        self._timestamp = time + 3600
+        self._timestamp = time + 3600000
         return True
 
 
