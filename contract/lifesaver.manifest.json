@@ -156,7 +156,7 @@
             },
             {
                 "name": "_deploy",
-                "offset": 5485,
+                "offset": 5445,
                 "parameters": [
                     {
                         "name": "data",
@@ -402,7 +402,7 @@
             },
             {
                 "name": "getLife",
-                "offset": 5296,
+                "offset": 5256,
                 "parameters": [
                     {
                         "name": "token_id",
@@ -414,7 +414,7 @@
             },
             {
                 "name": "getLifeJson",
-                "offset": 5350,
+                "offset": 5310,
                 "parameters": [
                     {
                         "name": "token_id",
@@ -426,7 +426,7 @@
             },
             {
                 "name": "getLifeJsonFlat",
-                "offset": 5364,
+                "offset": 5324,
                 "parameters": [
                     {
                         "name": "token_id",
@@ -438,7 +438,7 @@
             },
             {
                 "name": "_initialize",
-                "offset": 5689,
+                "offset": 5649,
                 "parameters": [],
                 "returntype": "Void",
                 "safe": false
@@ -467,6 +467,19 @@
                 ]
             },
             {
+                "name": "EraCreated",
+                "parameters": [
+                    {
+                        "name": "era",
+                        "type": "Integer"
+                    },
+                    {
+                        "name": "organization",
+                        "type": "ByteArray"
+                    }
+                ]
+            },
+            {
                 "name": "DonationDeposit",
                 "parameters": [
                     {
@@ -479,19 +492,6 @@
                     },
                     {
                         "name": "era",
-                        "type": "ByteArray"
-                    }
-                ]
-            },
-            {
-                "name": "EraCreated",
-                "parameters": [
-                    {
-                        "name": "era",
-                        "type": "Integer"
-                    },
-                    {
-                        "name": "organization",
                         "type": "ByteArray"
                     }
                 ]

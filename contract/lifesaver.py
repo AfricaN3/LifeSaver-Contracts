@@ -1199,7 +1199,6 @@ def makeTransferable(token_id: bytes) -> bool:
     """
     tx = cast(Transaction, script_container)
     user: User = get_user(tx.sender)
-    assert user.get_offline_mint(), 'User Permission Denied'
 
     life: Life = get_life(token_id)
     life_era_id: bytes = life.get_era_id()
