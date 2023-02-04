@@ -467,19 +467,6 @@
                 ]
             },
             {
-                "name": "EraCreated",
-                "parameters": [
-                    {
-                        "name": "era",
-                        "type": "Integer"
-                    },
-                    {
-                        "name": "organization",
-                        "type": "ByteArray"
-                    }
-                ]
-            },
-            {
                 "name": "DonationDeposit",
                 "parameters": [
                     {
@@ -492,6 +479,19 @@
                     },
                     {
                         "name": "era",
+                        "type": "ByteArray"
+                    }
+                ]
+            },
+            {
+                "name": "EraCreated",
+                "parameters": [
+                    {
+                        "name": "era",
+                        "type": "Integer"
+                    },
+                    {
+                        "name": "organization",
                         "type": "ByteArray"
                     }
                 ]
