@@ -156,7 +156,7 @@
             },
             {
                 "name": "_deploy",
-                "offset": 5445,
+                "offset": 5546,
                 "parameters": [
                     {
                         "name": "data",
@@ -335,7 +335,7 @@
             },
             {
                 "name": "getEraJson",
-                "offset": 3674,
+                "offset": 3775,
                 "parameters": [
                     {
                         "name": "era_id",
@@ -347,7 +347,7 @@
             },
             {
                 "name": "getEra",
-                "offset": 3688,
+                "offset": 3789,
                 "parameters": [
                     {
                         "name": "era_id",
@@ -359,14 +359,14 @@
             },
             {
                 "name": "totalEra",
-                "offset": 3771,
+                "offset": 3872,
                 "parameters": [],
                 "returntype": "Integer",
                 "safe": true
             },
             {
                 "name": "endEra",
-                "offset": 3807,
+                "offset": 3908,
                 "parameters": [
                     {
                         "name": "era_id",
@@ -378,7 +378,7 @@
             },
             {
                 "name": "payWinner",
-                "offset": 4020,
+                "offset": 4121,
                 "parameters": [
                     {
                         "name": "era_id",
@@ -390,7 +390,7 @@
             },
             {
                 "name": "makeTransferable",
-                "offset": 5129,
+                "offset": 5230,
                 "parameters": [
                     {
                         "name": "token_id",
@@ -402,7 +402,7 @@
             },
             {
                 "name": "getLife",
-                "offset": 5256,
+                "offset": 5357,
                 "parameters": [
                     {
                         "name": "token_id",
@@ -414,7 +414,7 @@
             },
             {
                 "name": "getLifeJson",
-                "offset": 5310,
+                "offset": 5411,
                 "parameters": [
                     {
                         "name": "token_id",
@@ -426,7 +426,7 @@
             },
             {
                 "name": "getLifeJsonFlat",
-                "offset": 5324,
+                "offset": 5425,
                 "parameters": [
                     {
                         "name": "token_id",
@@ -438,7 +438,7 @@
             },
             {
                 "name": "_initialize",
-                "offset": 5649,
+                "offset": 5750,
                 "parameters": [],
                 "returntype": "Void",
                 "safe": false

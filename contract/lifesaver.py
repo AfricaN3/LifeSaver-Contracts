@@ -825,6 +825,9 @@ def create_era(organization: bytes, date: bytes, no_of_winners: int, mint_fee: i
     tx = cast(Transaction, script_container)
     admin: UInt160 = tx.sender
 
+    assert mint_fee >= 100_000_000, 'Mint fee must cost at least 1 GAS'
+    assert no_of_winners >= 5, 'There should be at least 5 winners'
+
     new_era: Era = Era(admin, organization, date, no_of_winners, mint_fee)
     era_id: bytes = new_era.get_id()
     era_id_int: int = era_id.to_int()
@@ -1108,13 +1111,13 @@ class Life:
                             'a blood drive event ' + '(' + itoa(era_id_int) + ' era). Holders participated in ' +
                             'a raffle (Sponsored by ' +  era_organization.to_str() + ').',
             'eraId': era_id_int,
-            'image': 'https://github.com/AfricaN3/LifeSaver-Contracts/blob/master/media/'+ archetype_str + '.png',
+            'image': 'https://github.com/AfricaN3/LifeSaver-Contracts/master/media/'+ archetype_str + '.png',
             'name': 'life',
             'owner': self._owner,
             'tokenId': token_id_bytes,
             'archetype': archetype_str,
             'timestamp': timestamp,
-            'tokenURI': 'https://github.com/AfricaN3/LifeSaver-Contracts/blob/master/media/'+ archetype_str,
+            'tokenURI': 'https://github.com/AfricaN3/LifeSaver-Contracts/master/media/'+ archetype_str,
         }
         return exported
 
@@ -1149,8 +1152,8 @@ class Life:
 
         exported: Dict[str, Any] = {
             'name': 'life',
-            'image': 'https://github.com/AfricaN3/LifeSaver-Contracts/blob/master/media/'+ archetype_str + '.png',
-            'tokenURI': 'https://github.com/AfricaN3/LifeSaver-Contracts/blob/master/media/'+ archetype_str,
+            'image': 'https://github.com/AfricaN3/LifeSaver-Contracts/master/media/'+ archetype_str + '.png',
+            'tokenURI': 'https://github.com/AfricaN3/LifeSaver-Contracts/master/media/'+ archetype_str,
             'owner': self._owner,
             'tokenId': token_id_bytes.to_str(),
             'description': 'LifeSaver NFT #' + token_id_bytes.to_str() + '. This is a Soulbound token minted during ' + 
