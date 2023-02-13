@@ -1,5 +1,5 @@
 {
-    "name": "lifesaver",
+    "name": "LifeSaver",
     "groups": [],
     "abi": {
         "methods": [
@@ -156,7 +156,7 @@
             },
             {
                 "name": "_deploy",
-                "offset": 5546,
+                "offset": 5783,
                 "parameters": [
                     {
                         "name": "data",
@@ -263,7 +263,7 @@
             },
             {
                 "name": "getUserJson",
-                "offset": 2423,
+                "offset": 2492,
                 "parameters": [
                     {
                         "name": "address",
@@ -275,7 +275,7 @@
             },
             {
                 "name": "getUser",
-                "offset": 2437,
+                "offset": 2506,
                 "parameters": [
                     {
                         "name": "address",
@@ -287,7 +287,7 @@
             },
             {
                 "name": "isOfEra",
-                "offset": 2661,
+                "offset": 2730,
                 "parameters": [
                     {
                         "name": "account",
@@ -303,7 +303,7 @@
             },
             {
                 "name": "getEraReward",
-                "offset": 3140,
+                "offset": 3209,
                 "parameters": [
                     {
                         "name": "token",
@@ -319,7 +319,7 @@
             },
             {
                 "name": "setUserPermissions",
-                "offset": 3487,
+                "offset": 3556,
                 "parameters": [
                     {
                         "name": "user",
@@ -335,7 +335,7 @@
             },
             {
                 "name": "getEraJson",
-                "offset": 3775,
+                "offset": 3844,
                 "parameters": [
                     {
                         "name": "era_id",
@@ -347,7 +347,7 @@
             },
             {
                 "name": "getEra",
-                "offset": 3789,
+                "offset": 3858,
                 "parameters": [
                     {
                         "name": "era_id",
@@ -359,14 +359,26 @@
             },
             {
                 "name": "totalEra",
-                "offset": 3872,
+                "offset": 3941,
                 "parameters": [],
                 "returntype": "Integer",
                 "safe": true
             },
             {
                 "name": "endEra",
-                "offset": 3908,
+                "offset": 3977,
+                "parameters": [
+                    {
+                        "name": "era_id",
+                        "type": "ByteArray"
+                    }
+                ],
+                "returntype": "Boolean",
+                "safe": false
+            },
+            {
+                "name": "completeEra",
+                "offset": 4190,
                 "parameters": [
                     {
                         "name": "era_id",
@@ -378,7 +390,7 @@
             },
             {
                 "name": "payWinner",
-                "offset": 4121,
+                "offset": 4358,
                 "parameters": [
                     {
                         "name": "era_id",
@@ -390,7 +402,7 @@
             },
             {
                 "name": "makeTransferable",
-                "offset": 5230,
+                "offset": 5467,
                 "parameters": [
                     {
                         "name": "token_id",
@@ -402,7 +414,7 @@
             },
             {
                 "name": "getLife",
-                "offset": 5357,
+                "offset": 5594,
                 "parameters": [
                     {
                         "name": "token_id",
@@ -414,7 +426,7 @@
             },
             {
                 "name": "getLifeJson",
-                "offset": 5411,
+                "offset": 5648,
                 "parameters": [
                     {
                         "name": "token_id",
@@ -426,7 +438,7 @@
             },
             {
                 "name": "getLifeJsonFlat",
-                "offset": 5425,
+                "offset": 5662,
                 "parameters": [
                     {
                         "name": "token_id",
@@ -438,7 +450,7 @@
             },
             {
                 "name": "_initialize",
-                "offset": 5750,
+                "offset": 6082,
                 "parameters": [],
                 "returntype": "Void",
                 "safe": false
@@ -467,6 +479,19 @@
                 ]
             },
             {
+                "name": "EraCreated",
+                "parameters": [
+                    {
+                        "name": "era",
+                        "type": "Integer"
+                    },
+                    {
+                        "name": "organization",
+                        "type": "ByteArray"
+                    }
+                ]
+            },
+            {
                 "name": "DonationDeposit",
                 "parameters": [
                     {
@@ -479,19 +504,6 @@
                     },
                     {
                         "name": "era",
-                        "type": "ByteArray"
-                    }
-                ]
-            },
-            {
-                "name": "EraCreated",
-                "parameters": [
-                    {
-                        "name": "era",
-                        "type": "Integer"
-                    },
-                    {
-                        "name": "organization",
                         "type": "ByteArray"
                     }
                 ]

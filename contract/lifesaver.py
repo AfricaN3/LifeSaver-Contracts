@@ -21,6 +21,7 @@ def manifest_metadata() -> NeoMetadata:
     Defines this smart contract's metadata information
     """
     meta = NeoMetadata()
+    meta.name = 'LifeSaver'
     meta.author = 'AfricaN3'
     meta.description = 'Donate, save a life and mint LifeSaver NFTs'
     meta.email = 'hello@african3.com'
@@ -394,6 +395,8 @@ def _deploy(data: Any, update: bool):
         user: User = User()
         user.set_permissions(super_user_permissions)
         save_user(owner, user)
+        token64 = base64_encode(GAS)
+        get_context().create_map(SUPPORTED_TOKENS_SCRIPT_HASH).put(token64, True)
 
 
 @public
@@ -521,7 +524,10 @@ def internal_mint(era_id: bytes, owner: UInt160, archetype: int) -> bytes:
     """
 
     mint_era: Era = get_era(era_id)
-    assert mint_era.can_mint(), 'No available LIFE to mint in the selected era'
+    if archetype == 0:
+        assert mint_era.can_mint_fan(), 'Fan Archetype can not be minted at this time'
+    else:
+        assert mint_era.can_mint(), 'No available LIFE to mint in the selected era'
 
     assert not isOfEra(owner, era_id), 'There is LIFE belonging to this era in this account already'
     addEraToAccount(owner, era_id)
@@ -754,6 +760,9 @@ class Era:
 
     def can_mint(self) -> bool:
         return self._status == 0
+    
+    def can_mint_fan(self) -> bool:
+        return self._status == 2
 
     def can_donate(self) -> bool:
         return self._status <= 1
@@ -874,8 +883,7 @@ def end_era(era_id: bytes) -> bool:
     """
     Ends an era.
 
-    This method ends minting NFTs to the era (changes the status to 1) and also creates a 
-    collection of era NFT holders on the Collection contract.
+    This method ends minting of donor and angel NFTs to the era (changes the status to 1).
 
     :return: a boolean indicating success
     """
@@ -896,12 +904,38 @@ def end_era(era_id: bytes) -> bool:
     return True
 
 
+@public(name='completeEra')
+def complete_era(era_id: bytes) -> bool:
+    """
+    Completes an era.
+
+    This method ends minting of fan NFTs to the era (changes the status to 3).
+
+    :return: a boolean indicating success
+    """
+    era_to_end: Era = get_era(era_id)
+    tx = cast(Transaction, script_container)
+    user: User = get_user(tx.sender)
+    is_era_admin: bool = era_to_end.get_admin() == tx.sender
+    can_manage_era: bool = user.can_manage_era()
+    can_end_era: bool = can_manage_era or is_era_admin
+
+    assert era_to_end.can_mint_fan(), 'Era is at an inappropriate status'
+    assert can_end_era, 'User Permission Denied'
+    
+    era_to_end.increment_status()
+    save_era(era_to_end)
+
+    return True
+
+
 @public
 def payWinner(era_id: bytes) -> bool:
     """
     Carries out a raffle to reward NFT holders of a particular era.
 
-    This method randomly select a winner for an era 
+    This method randomly select a winner for an era and changes status to 2 
+    when all winners have been paid
 
     :return: a boolean indicating success
     """
