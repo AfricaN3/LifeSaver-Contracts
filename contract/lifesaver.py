@@ -1138,20 +1138,22 @@ class Life:
 
         era_id_int: int = era_id_bytes.to_int()
         era: Era = get_era(era_id_bytes)
-        era_organization: bytes = era.get_organization()
+        participants: int = era.get_total_supply()
+        winners_no: int = era.get_no_of_winners()
 
         exported: Dict[str, Any] = {
             'description': 'LifeSaver NFT #' + token_id_bytes.to_str() + '. This is a Soulbound token minted during ' + 
                             'a blood drive event ' + '(' + itoa(era_id_int) + ' era). Holders participated in ' +
-                            'a raffle (Sponsored by ' +  era_organization.to_str() + ').',
+                            'a raffle (' + itoa(winners_no) + ' winners chosen from ' + itoa(participants) +' participants).',
             'eraId': era_id_int,
-            'image': 'https://github.com/AfricaN3/LifeSaver-Contracts/master/media/'+ archetype_str + '.png',
+            'image': 'https://lifesavernfts.com/'+ archetype_str + '.png',
+            'video': 'https://lifesavernfts.com/'+ archetype_str + '.mp4',
             'name': 'life',
             'owner': self._owner,
             'tokenId': token_id_bytes,
             'archetype': archetype_str,
             'timestamp': timestamp,
-            'tokenURI': 'https://github.com/AfricaN3/LifeSaver-Contracts/master/media/'+ archetype_str,
+            'tokenURI': 'https://lifesavernfts.com/'+ archetype_str,
         }
         return exported
 
@@ -1167,7 +1169,8 @@ class Life:
 
         era_id_int: int = era_id_bytes.to_int()
         era: Era = get_era(era_id_bytes)
-        era_organization: bytes = era.get_organization()
+        participants: int = era.get_total_supply()
+        winners_no: int = era.get_no_of_winners()
 
         life_attrs: List[Any] = [
             {
@@ -1186,13 +1189,14 @@ class Life:
 
         exported: Dict[str, Any] = {
             'name': 'life',
-            'image': 'https://github.com/AfricaN3/LifeSaver-Contracts/master/media/'+ archetype_str + '.png',
-            'tokenURI': 'https://github.com/AfricaN3/LifeSaver-Contracts/master/media/'+ archetype_str,
+            'image': 'https://lifesavernfts.com/'+ archetype_str + '.png',
+            'video': 'https://lifesavernfts.com/'+ archetype_str + '.mp4',
+            'tokenURI': 'https://lifesavernfts.com/'+ archetype_str,
             'owner': self._owner,
             'tokenId': token_id_bytes.to_str(),
             'description': 'LifeSaver NFT #' + token_id_bytes.to_str() + '. This is a Soulbound token minted during ' + 
                             'a blood drive event ' + '(' + itoa(era_id_int) + ' era). Holders participated in ' +
-                            'a raffle (Sponsored by ' +  era_organization.to_str() + ').',
+                            'a raffle (' + itoa(winners_no) + ' winners chosen from ' + itoa(participants) +' participants).',
             'attributes': life_attrs
         }
         return exported
